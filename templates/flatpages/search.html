@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'flatpages/news.html' %}
+    {% load filter %} <!-- загрузка фильтра -->
+    {% load crispy_forms_field %}
+    <meta charset="UTF-8">
+<!-- Изменение заголовочной части базового шаблона default -->
+{% block title %}    
+    <h5> Найдено количество постов: {{ post | length }}</h5>
+{% endblock title %}
+</head>
+<body>
+{% block filter %}
+    <!-- если открывается адрес ...news/search.html, то выводится  
+                        таблица, содерджащая фильтр поиска поста -->
+    <form action="" method="get"> <!-- пользовательская форма полей фильтра -->
+        {% csrf_token %}
+        <table class="table-active" style="background-color: #fff3cd">
+            <tr><td width="25"></td>
+                <td width="500"> 
+                    <div class="form-control-color">{{ filter.search_title}}</div>
+                     </td>
+                <td width="50"><input type="submit" value="Поиск поста" /></td> <!-- Кнопка поиска статьи 
+                                                                                        по критериям фильтра -->
+                
+            <td width="25"></td>
+            </tr>
+        </table>
+    </form>
+
+{% endblock filter %}
+</body>
+</html>

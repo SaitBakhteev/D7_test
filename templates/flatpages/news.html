@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'flatpages/default.html' %}
+    {% load filter %} <!-- загрузка фильтра -->
+{% load custom_tags %}
+    <meta charset="UTF-8">
+<!-- Изменение заголовочной части базового шаблона default -->
+{% block title %}    
+    <h5> Количество постов: {{ post | length }}</h5>
+{% endblock title %}
+</head>
+<body>
+{% block content %}
+    
+ {% block filter %}          
+  {{ flatpage.filter }}
+               
+  {% endblock filter %}
+
+    
+<!-- Таблица, выводящая новости/статьи -->
+    <!-- Постраничный вывод новостей -->
+    
+   
+    {% if page_obj.has_previous %} <!-- если открыта не первая страница -->
+       <a href="?{% url_replace page=1 %}">1</a>        
+       {% if  page_obj.previous_page_number != 1 %}           
+           {% if page_obj.previous_page_number != 2 %}
+               ... <!-- многоточие, если предыдущая страница не соседствует с первой страницой -->
+               {% endif %}
+           <!-- отображается ссылка на номер предыдущей соседней страницы -->           
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+    {% endif %}
+    {{ page_obj.number}} <!-- отображается номер открытой страницы -->
+        
+    <!-- Отображение ссылки на номер следующей соседней страницы -->
+        {% if page_obj.has_next %} <!-- если не достигнута последняя страница -->        
+            {% if page_obj.next_page_number != paginator.num_pages %} <!-- если соседняя страница не является последней -->                
+{#                <a href="?{% url_replace page_obj.next_page_number  %}">{{ page_obj.next_page_number }}</a>#}
+                ...
+            {%  endif %}
+            <a href="?{% url_replace page=paginator.num_pages %}">{{ paginator.num_pages }}</a>
+            
+        {% endif %}
+
+   
+    <table class="table-bordered"  style="background-color: #25cff2; border-color: ghostwhite " cellspacing="10">
+<tbody> 
+        <tr>
+            <td><h5>Заголовок поста </h5></td>
+            <td><h5>Дата публикации</h5></td>
+            <td><h5>Выдержка из статьи</h5></td>
+        </tr>
+{% if post %}        
+        <!-- Содержимое ячеек таблицы -->
+        {% for i in post %}
+            <tr>                
+                <td>{{ i.title |censor:'секс'|censor:'Секс'}}</td>
+                <td>{{i.create_time | date:'d.m.Y H:i:s' }}</td>
+                <td>{{ i.content|truncatechars:20 |censor:'секс'|censor:'Секс'}}</td>
+            </tr>
+            
+        {% endfor %}
+{% endif %}
+
+</tbody></table>
+    
+    {% endblock content %}
+    
+    
+    <!-- Отдельный блок -->
+
+</body>
+</html>
